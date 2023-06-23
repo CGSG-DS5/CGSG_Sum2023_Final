@@ -1,0 +1,18 @@
+body {
+  background-color: #202a44;
+  color: white;
+  /* cursor: none; */
+  #wrapper {
+    position: relative;
+  }
+  #dsCan {
+    position: absolute;
+    z-index: 0;
+  }
+  #dsCan2D {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+  }
+}

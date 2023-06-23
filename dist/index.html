@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>DS5 :: TanksOnline</title>
+  </head>
+  <body>
+    <input id="windowW" type="range" min="100" max="1920" step="10" />
+    <span id="windowWText">1080</span>
+    <input id="windowH" type="range" min="100" max="1080" step="10" />
+    <span id="windowHText">1080</span>
+    <br />
+    <input id="hide" type="button" value="Press button to hide cursor" />
+    <br />
+
+    <div id="wrapper">
+      <canvas id="dsCan" width="1200px" height="800px"></canvas>
+      <canvas id="dsCan2D" width="1200px" height="800px"></canvas>
+    </div>
+
+    <script type="text/javascript">
+      let data = sessionStorage.getItem("screen");
+      if (data) {
+        data = JSON.parse(data);
+        document.getElementById("windowW").value = data.w;
+        document.getElementById("windowW").innerHTML = "FrameW:" + data.w;
+        document.getElementById("windowH").value = data.h;
+        document.getElementById("windowH").innerHTML = "FrameH:" + data.h;
+      }
+    </script>
+    <script src="bundle.js" type="module"></script>
+  </body>
+</html>
