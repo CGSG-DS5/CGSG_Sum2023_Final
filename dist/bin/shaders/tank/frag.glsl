@@ -70,7 +70,7 @@ void shade( void )
   {
     if (AddonI2 == 0)
     {
-      float sign = (DrawInPosTank.x * RotateWheels) > 0.0 ? 1.0 : -1.0;
+      float sign = (DrawInPosTank.x) > 0.0 ? 1.0 : -1.0;
       RotateWheels *= sign;
       si *= sign;
     }
