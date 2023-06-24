@@ -155,7 +155,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 4000, () => {
+server.listen(process.env.PORT || 5000, () => {
   //console.log(`Server started on port ${server.address().port} :)`);
 });
 
