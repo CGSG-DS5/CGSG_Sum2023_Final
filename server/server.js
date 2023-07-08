@@ -117,6 +117,24 @@ io.on("connection", (socket) => {
     clientsData[clients.indexOf(socket)].cam.setSize(w, h);
   });
 
+  socket.on("Controls", (ctrl) => {
+    const n = clients.indexOf(socket);
+    for (let i = 0; i < ctrl.keys.length; i++) {
+      clientsData[n].input.keysOld[ctrl.keys[i].code] =
+        clientsData[n].input.keys[ctrl.keys[i].code];
+      clientsData[n].input.keys[ctrl.keys[i].code] = ctrl.keys[i].status;
+      clientsData[n].input.keysClick[ctrl.keys[i].code] =
+        clientsData[n].input.keysOld[ctrl.keys[i].code] === 0
+          ? clientsData[n].input.keys[ctrl.keys[i].code]
+          : 0;
+    }
+    clientsData[n].input.mdx += ctrl.mdx;
+    clientsData[n].input.mdy += ctrl.mdy;
+    clientsData[n].input.mdz += ctrl.mdz;
+    clientsData[n].input.isLB = ctrl.mouseLB;
+    clientsData[n].input.isRB = ctrl.mouseRB;
+  });
+
   socket.on("Keys", (keyCode, t) => {
     // console.log(`Client ${socket.id} ${t === 1 ? "down" : "up"} (${keyCode})`);
     // if (t === 0) debugger;
@@ -291,6 +309,7 @@ function updateClientData(data, ind) {
           .mulNum(timer.localDeltaTime * timer.localDeltaTime)
       );
     }
+    const velN = data.veloc.dot(vec1);
     data.veloc = data.veloc.add(
       vec
         .mulNum(
@@ -303,6 +322,16 @@ function updateClientData(data, ind) {
         )
         .sub(vec1.mulNum(data.veloc.dot(vec1) * timer.localDeltaTime * 100))
     );
+    if (data.veloc.dot(vec1) * velN < 0) {
+      data.veloc = data.veloc.sub(vec1.mulNum(data.veloc.dot(vec1)));
+    }
+    // const velN1 = data.veloc.dot(vec1);
+    // if (
+    //   (velN1 < 0.001 && velN1 < 0.001) ||
+    //   (velN1 > -0.001 && velN1 > -0.001)
+    // ) {
+    //   data.veloc = vec3(0);
+    // }
     if (
       data.veloc.len2() <= 0.25 &&
       data.input.keys[87] - data.input.keys[83] === 0
@@ -607,4 +636,4 @@ setInterval(() => {
       wallsSc: 0.5,
     });
   }
-}, 10);
+}, 15);

@@ -7,7 +7,7 @@ module.exports = {
   output: {
     file: "dist/bundle.js",
     format: "iife",
-    sourcemap: "inline",
+    // sourcemap: "inline",
   },
   plugins: [
     resolve({

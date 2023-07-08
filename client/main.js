@@ -300,7 +300,18 @@ function resize(socket) {
   );
 }
 
-const timeUpdate = [0, 0, 0, 0, 0];
+const controls = {
+  keys: [],
+  mouseLB: false,
+  mouseRB: false,
+  mdx: 0,
+  mdy: 0,
+  mdz: 0,
+};
+
+let isPressedF4 = false;
+let isFullScreen = false;
+let inputSend = () => {};
 
 async function main() {
   const socket = io();
@@ -318,59 +329,57 @@ async function main() {
     document.getElementById("windowH").addEventListener("input", () => {
       resize(socket);
     });
+
     // Hiding cursor
     document.getElementById("hide").addEventListener("click", async () => {
       await document
         .getElementById("dsCan")
         .requestPointerLock({ unadjustedMovement: true });
     });
-    // Controls
-    const t = 0;
-    window.addEventListener("mousemove", (e) => {
-      if (true) {
-        //timeFromServer - timeUpdate[0] >= t
-        socket.emit("MouseMove", e.movementX, e.movementY);
+    document.getElementById("dsCan2D").onclick = async () => {
+      await document
+        .getElementById("dsCan")
+        .requestPointerLock({ unadjustedMovement: true });
+    };
 
-        // timeUpdate[0] = timeFromServer;
-      }
+    // Controls
+    window.addEventListener("mousemove", (e) => {
+      controls.mdx += e.movementX;
+      controls.mdy += e.movementY;
     });
     window.addEventListener("mousedown", (e) => {
-      if (true) {
-        //timeFromServer - timeUpdate[1] >= t
-        if (e.button === 0) socket.emit("MouseButton", true, true);
-        else if (e.button === 2) socket.emit("MouseButton", false, true);
-
-        // timeUpdate[1] = timeFromServer;
-      }
+      if (e.button === 0) controls.mouseLB = true;
+      else if (e.button === 2) controls.mouseRB = true;
     });
     window.addEventListener("mouseup", (e) => {
-      if (true) {
-        //timeFromServer - timeUpdate[2] >= t
-        if (e.button === 0) socket.emit("MouseButton", true, false);
-        else if (e.button === 2) socket.emit("MouseButton", false, false);
-
-        // timeUpdate[2] = timeFromServer;
-      }
+      if (e.button === 0) controls.mouseLB = false;
+      else if (e.button === 2) controls.mouseRB = false;
     });
     window.addEventListener("mousewheel", (e) => {
-      socket.emit("MouseWheel", e.deltaY);
+      controls.mdz += e.deltaY;
     });
     window.addEventListener("keydown", (e) => {
-      if (timeFromServer - timeUpdate[3] >= t) {
-        socket.emit("Keys", e.keyCode, 1);
-
-        timeUpdate[3] = timeFromServer;
+      if (e.code === "F4" && !isPressedF4) {
+        isPressedF4 = true;
+        isFullScreen = !isFullScreen;
+        const wrapper = document.getElementById("wrapper");
+        if (isFullScreen) wrapper.style.position = "absolute";
+        else wrapper.style.position = "relative";
       }
+      controls.keys.push({ code: e.keyCode, status: 1 });
     });
     window.addEventListener("keyup", (e) => {
-      if (timeFromServer - timeUpdate[4] >= t) {
-        socket.emit("Keys", e.keyCode, 0);
-
-        timeUpdate[4] = timeFromServer;
-      }
+      if (`${e.code}` === "F4") isPressedF4 = false;
+      controls.keys.push({ code: e.keyCode, status: 0 });
     });
+    inputSend = () => {
+      socket.emit("Controls", controls);
+      controls.mdx = controls.mdy = controls.mdz = 0;
+      controls.keys = [];
+    };
 
     socket.on("ClientRender", (data) => {
+      inputSend();
       renderAll(data);
     });
   });

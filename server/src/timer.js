@@ -32,12 +32,12 @@ function dsTimer() {
       this.frameCounter = 0;
       if (tag_id != null)
         document.getElementById(tag_id).innerHTML = this.getFPS();
+
+      // FPS output
+      // let tag = document.getElementById("fps");
+      // console.log("FPS:" + this.getFPS());
     }
     this.oldTime = t;
-
-    // FPS output
-    // let tag = document.getElementById("fps");
-    // console.log("FPS:" + this.getFPS());
   };
 
   // Obtain FPS as string method
