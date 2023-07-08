@@ -51,6 +51,7 @@ function projAxis(points, axis) {
 function intersectionOfProj(a, b, axis) {
   let minVec = null;
   for (let j = 0; j < axis.length; j++) {
+    if (j === 0 || j === 3) continue;
     const [minA, maxA] = projAxis(a, axis[j]);
     const [minB, maxB] = projAxis(b, axis[j]);
 
