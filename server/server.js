@@ -435,6 +435,8 @@ function updateClientData(data, ind) {
       .mulMatr(matrTranslate(at))
   );
 
+  data.cam.camSet(loc, at, vec3(0, 1, 0));
+
   /* */
   let avrg = maxBB15.add(minBB15).divNum(2);
 
@@ -517,8 +519,6 @@ function updateClientData(data, ind) {
       else if (data.anglGun < -10) data.anglGun = -10;
     }
   }
-
-  data.cam.camSet(loc, at, vec3(0, 1, 0));
 
   const vtower = maxBB14.add(minBB14).divNum(2);
   let vgun = maxBB15.add(minBB15).divNum(2);
@@ -625,6 +625,43 @@ setInterval(() => {
   }
   shells.update(clientsData, tankR);
   for (let i = 0; i < clients.length; i++) {
+    let dist = clientsData[i].cam.at.sub(clientsData[i].cam.loc).len();
+    let cosT = (clientsData[i].cam.loc.y - clientsData[i].cam.at.y) / dist;
+    let sinT = Math.sqrt(1 - cosT * cosT);
+    let plen = dist * sinT;
+    let cosP = (clientsData[i].cam.loc.z - clientsData[i].cam.at.z) / plen;
+    let sinP = (clientsData[i].cam.loc.x - clientsData[i].cam.at.x) / plen;
+
+    let azimuth = r2d(Math.atan2(sinP, cosP));
+    let elevator = r2d(Math.atan2(sinT, cosT));
+
+    azimuth -= timer.globalDeltaTime * clientsData[i].input.mdx * 10;
+    elevator -= timer.globalDeltaTime * clientsData[i].input.mdy * 10;
+    dist +=
+      ((timer.globalDeltaTime *
+        (clientsData[i].input.mdz +
+          20 *
+            (clientsData[i].input.keys[34] - clientsData[i].input.keys[33]))) /
+        20) *
+      dist;
+
+    if (elevator < 0.1) elevator = 0.1;
+    else if (elevator > 178.9) elevator = 178.9;
+    if (dist < 0.1) dist = 0.1;
+
+    let at = maxBB14
+      .add(minBB14)
+      .divNum(2)
+      .add(vec3(0, 0.75, 0))
+      .pointTransform(clientsData[i].trans);
+
+    let loc = vec3(0, dist, 0).pointTransform(
+      matrRotateX(elevator)
+        .mulMatr(matrRotateY(azimuth))
+        .mulMatr(matrTranslate(at))
+    );
+
+    clientsData[i].cam.camSet(loc, at, vec3(0, 1, 0));
     clients[i].emit("ClientRender", {
       time: timer.localTime,
       clients: data,
@@ -643,4 +680,4 @@ setInterval(() => {
     });
   }
   isRendering = false;
-}, 10);
+}, 40);
