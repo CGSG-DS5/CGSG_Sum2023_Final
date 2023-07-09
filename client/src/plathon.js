@@ -27,6 +27,24 @@ export function makeV(v, ind) {
   return res;
 }
 
+function makeV2(v, ind) {
+  let res = [];
+  if (ind !== null)
+    for (let i = 0; i < ind.length; i++) {
+      res[i] = dsVert(
+        v[ind[i]].add(vec3(((i - (i % 6)) / 6) * 2)),
+        vec2(0),
+        vec3(0),
+        vec4(0)
+      );
+    }
+  else
+    for (let i = 0; i < v.length; i++) {
+      res[i] = dsVert(v[i].add(vec3(i / 4)), vec2(0), vec3(0), vec4(0));
+    }
+  return res;
+}
+
 export function makeVecs(v, ind) {
   let res = [];
   for (let i = 0; i < ind.length; i++) {
@@ -71,7 +89,7 @@ export function createHexahedron(matr) {
     4, 5, 6, 4, 6, 7,
   ];
 
-  let v = makeV(vecs, i);
+  let v = makeV2(vecs, i);
 
   for (let j = 0; j + 2 < v.length; j += 3) {
     if (j % 2 === 0) {

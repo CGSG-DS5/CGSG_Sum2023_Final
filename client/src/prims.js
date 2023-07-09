@@ -2,7 +2,7 @@ import { dsRnd } from "../main";
 import { matrIdentity } from "./mthmat4";
 import { vec3 } from "./mthvec3";
 import { dsMtl } from "./mtl";
-import { dsPrim, dsRndShdAddnonI } from "./rnd";
+import { dsPrim, dsRndShdAddonI } from "./rnd";
 
 export class dsPrims {
   constructor(numOfPrims) {
@@ -15,10 +15,10 @@ export class dsPrims {
   draw = (world, vp) => {
     const m = this.trans.mulMatr(world);
 
-    dsRndShdAddnonI[0] = this.numOfPrims;
+    dsRndShdAddonI[0] = this.numOfPrims;
     for (let i = 0; i < this.numOfPrims; i++)
       if (dsRnd.mtl.get(this.prims[i].mtlNo).trans === 1) {
-        dsRndShdAddnonI[1] = i;
+        dsRndShdAddonI[1] = i;
         this.prims[i].draw(m, vp);
       }
 
@@ -27,14 +27,14 @@ export class dsPrims {
     window.gl.cullFace(window.gl.FRONT);
     for (let i = 0; i < this.numOfPrims; i++)
       if (dsRnd.mtl.get(this.prims[i].mtlNo).trans !== 1) {
-        dsRndShdAddnonI[1] = i;
+        dsRndShdAddonI[1] = i;
         this.prims[i].draw(m, vp);
       }
 
     window.gl.cullFace(window.gl.BACK);
     for (let i = 0; i < this.numOfPrims; i++)
       if (dsRnd.mtl.get(this.prims[i].mtlNo).trans !== 1) {
-        dsRndShdAddnonI[1] = i;
+        dsRndShdAddonI[1] = i;
         this.prims[i].draw(m, vp);
       }
 

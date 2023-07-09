@@ -16,11 +16,16 @@ uniform MatrixUBO // 0
 out vec3 DrawPos; 
 out vec2 DrawTexCoord;
 out vec3 DrawNormal;
+out vec3 DrawInPos;
+flat out int WallNum;
 
 void main( void )
 {
+  WallNum = int(InPos.x) / 2;
+  vec3 InRealPos = InPos - vec3(float(WallNum) * 2.0);
   DrawNormal = mat3(WInv) * normalize(InNormal);
-  DrawPos = (W * vec4(InPos, 1.0)).xyz;
+  DrawPos = (W * vec4(InRealPos, 1.0)).xyz;
   DrawTexCoord = InTexCoord;
-  gl_Position = WVP * vec4(InPos, 1.0);
+  DrawInPos = InRealPos;
+  gl_Position = WVP * vec4(InRealPos, 1.0);
 }

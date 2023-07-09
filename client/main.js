@@ -4,8 +4,8 @@ import {
   _dsVert,
   dsPrim,
   dsRender,
-  dsRndShdAddnonF,
-  dsRndShdAddnonI,
+  dsRndShdAddonF,
+  dsRndShdAddonI,
   dsVert,
 } from "./src/rnd";
 import { uniform_buffer } from "./src/buffer";
@@ -138,7 +138,7 @@ function renderInit() {
     1,
     0
   );
-  // mtl.tex[0] = dsRnd.tex.add("wallTex.jpg");
+  mtl.tex[0] = dsRnd.tex.add("wallTex.jpg");
   mtl.shdNo = dsRnd.shd.add("wall");
   wallPrim.mtlNo = dsRnd.mtl.add(mtl);
 
@@ -213,19 +213,19 @@ function renderAll(data) {
       tankPrims.prims[16].trans = matrFromMatr(data.clients[i].matrdisk);
 
       // Tank model
-      dsRndShdAddnonF[0] = d2r(data.clients[i].f0);
-      dsRndShdAddnonF[1] = Math.cos(dsRndShdAddnonF[0]);
-      dsRndShdAddnonF[2] = Math.sin(dsRndShdAddnonF[0]);
+      dsRndShdAddonF[0] = d2r(data.clients[i].f0);
+      dsRndShdAddonF[1] = Math.cos(dsRndShdAddonF[0]);
+      dsRndShdAddonF[2] = Math.sin(dsRndShdAddonF[0]);
 
-      dsRndShdAddnonI[2] = data.clients[i].i2;
-      dsRndShdAddnonI[3] = data.clients[i].i3;
+      dsRndShdAddonI[2] = data.clients[i].i2;
+      dsRndShdAddonI[3] = data.clients[i].i3;
 
       tankPrims.draw(matrIdentity(), vp);
 
       // HitPoints bar
       if (data.numOfClient !== i) {
-        dsRndShdAddnonF[0] = data.clients[i].hp;
-        dsRndShdAddnonF[1] = data.clients[i].maxHp;
+        dsRndShdAddonF[0] = data.clients[i].hp;
+        dsRndShdAddonF[1] = data.clients[i].maxHp;
         hpPrim.draw(data.clients[i].matrPos, vp);
       }
     }
@@ -238,8 +238,8 @@ function renderAll(data) {
 
   // Reload circle (+ hp)
   if (tankPrims !== null) {
-    dsRndShdAddnonF[0] = 1 - Math.max(data.reloading, 0) / data.reloadTime;
-    dsRndShdAddnonF[1] = data.hp / data.maxHp;
+    dsRndShdAddonF[0] = 1 - Math.max(data.reloading, 0) / data.reloadTime;
+    dsRndShdAddonF[1] = data.hp / data.maxHp;
     reloadPrim.draw(matrIdentity(), vp);
   }
 
@@ -248,8 +248,9 @@ function renderAll(data) {
     const scX = data.walls[i].maxBB.x - data.walls[i].minBB.x;
     const scY = data.walls[i].maxBB.y - data.walls[i].minBB.y;
     const scZ = data.walls[i].maxBB.z - data.walls[i].minBB.z;
-    // dsRndShdAddnonF[0] = (Math.max(scX, scZ) * data.wallsSc) / 5;
-    // dsRndShdAddnonF[1] = (scY * data.wallsSc) / 5;
+    dsRndShdAddonF[0] = scX * data.wallsSc;
+    dsRndShdAddonF[1] = scY;
+    dsRndShdAddonF[2] = scZ * data.wallsSc;
     wallPrim.draw(
       matrScale(vec3(scX * data.wallsSc, scY, scZ * data.wallsSc)).mulMatr(
         matrTranslate(vec3Fromvec3(data.walls[i].minBB).mulNum(data.wallsSc))

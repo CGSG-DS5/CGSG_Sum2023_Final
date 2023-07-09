@@ -76,7 +76,7 @@ void shade( void )
     }
     else
     {            
-      float k = (DrawInPosTank.x * float(AddonI3) * RotateWheels) < 0.0 ? 1.0 : 0.3;
+      float k = (DrawInPosTank.x * float(AddonI3) * float(AddonI2)) < 0.0 ? 1.0 : 0.3;
       RotateWheels *= k;
       si = sin(RotateWheels);
       co = cos(RotateWheels);

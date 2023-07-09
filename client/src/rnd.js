@@ -23,8 +23,8 @@ import { camUBO, dsRnd, timeFromServer } from "../main.js";
 import { dsMtl, dsRndMtl } from "./mtl.js";
 import { dsRndTexture } from "./tex.js";
 
-export let dsRndShdAddnonI = [0, 0, 0, 0];
-export let dsRndShdAddnonF = [0, 0, 0];
+export let dsRndShdAddonI = [0, 0, 0, 0];
+export let dsRndShdAddonF = [0, 0, 0];
 
 export function countNormals(v, ind) {
   for (let i = 0; i < v.length; i++) v[i].n = vec3(0);
@@ -206,26 +206,26 @@ export class dsPrim {
     }
 
     if ((loc = window.gl.getUniformLocation(prg, "AddonI0")) !== -1) {
-      window.gl.uniform1i(loc, dsRndShdAddnonI[0]);
+      window.gl.uniform1i(loc, dsRndShdAddonI[0]);
     }
     if ((loc = window.gl.getUniformLocation(prg, "AddonI1")) !== -1) {
-      window.gl.uniform1i(loc, dsRndShdAddnonI[1]);
+      window.gl.uniform1i(loc, dsRndShdAddonI[1]);
     }
     if ((loc = window.gl.getUniformLocation(prg, "AddonI2")) !== -1) {
-      window.gl.uniform1i(loc, dsRndShdAddnonI[2]);
+      window.gl.uniform1i(loc, dsRndShdAddonI[2]);
     }
     if ((loc = window.gl.getUniformLocation(prg, "AddonI3")) !== -1) {
-      window.gl.uniform1i(loc, dsRndShdAddnonI[3]);
+      window.gl.uniform1i(loc, dsRndShdAddonI[3]);
     }
 
     if ((loc = window.gl.getUniformLocation(prg, "AddonF0")) !== -1) {
-      window.gl.uniform1f(loc, dsRndShdAddnonF[0]);
+      window.gl.uniform1f(loc, dsRndShdAddonF[0]);
     }
     if ((loc = window.gl.getUniformLocation(prg, "AddonF1")) !== -1) {
-      window.gl.uniform1f(loc, dsRndShdAddnonF[1]);
+      window.gl.uniform1f(loc, dsRndShdAddonF[1]);
     }
     if ((loc = window.gl.getUniformLocation(prg, "AddonF2")) !== -1) {
-      window.gl.uniform1f(loc, dsRndShdAddnonF[2]);
+      window.gl.uniform1f(loc, dsRndShdAddonF[2]);
     }
 
     window.gl.bindVertexArray(this.vA);
