@@ -539,7 +539,13 @@ function updateClientData(data, ind) {
   data.input.mdy = data.input.mdx = 0;
 }
 
+let isRendering = false;
+
 setInterval(() => {
+  if (isRendering) {
+    return;
+  }
+  isRendering = true;
   timer.response();
   const data = [];
   for (let i = 0; i < clients.length; i++) {
@@ -636,4 +642,5 @@ setInterval(() => {
       wallsSc: 0.5,
     });
   }
-}, 40);
+  isRendering = false;
+}, 10);
